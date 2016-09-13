@@ -1,0 +1,41 @@
+apply plugin: 'com.android.model.library'
+
+model {
+    android {
+        compileSdkVersion rootProject.ext.compileSdkVersion
+        buildToolsVersion rootProject.ext.buildToolsVersion
+        defaultConfig.with {
+            minSdkVersion.apiLevel rootProject.ext.minSdkVersion
+            targetSdkVersion.apiLevel rootProject.ext.targetSdkVersion
+            versionCode rootProject.ext.versionCode
+            versionName rootProject.ext.versionName
+            externalNativeBuild {
+                cmake {
+                    targets.addAll([ "foo", "cpufeatures" ])
+                    arguments.addAll([ "-DANDROID_FORCE_ARM_BUILD=ON", "-DANDROID_ARM_NEON=ON", "-DANDROID_TOOLCHAIN=gcc" ])
+                    cppFlags.addAll( [
+                            "-Wno-switch",
+                            "-Wno-unused-value",
+                            "-Wno-bitwise-op-parentheses",
+                            "-Wno-logical-op-parentheses",
+                            "-Wno-c++11-compat-deprecated-writable-strings",
+                            "-Wno-format",
+                            "-Wno-parentheses",
+                            "-Wno-mismatched-new-delete",
+                            "-Wno-constant-logical-operand"
+                    ] )
+                    abiFilters.add("armeabi-v7a")
+                }
+            }
+        }
+        externalNativeBuild {
+            cmake {
+                path "CMakeLists.txt"
+            }
+        }
+    }
+}
+
+dependencies {
+    compile project(path: ':bar')
+}

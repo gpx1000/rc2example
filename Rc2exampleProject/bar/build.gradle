@@ -1,0 +1,39 @@
+apply plugin: 'com.android.model.library'
+
+model {
+    android {
+        compileSdkVersion rootProject.ext.compileSdkVersion
+        buildToolsVersion rootProject.ext.buildToolsVersion
+        defaultConfig.with {
+            minSdkVersion.apiLevel rootProject.ext.minSdkVersion
+            targetSdkVersion.apiLevel rootProject.ext.targetSdkVersion
+            versionCode rootProject.ext.versionCode
+            versionName rootProject.ext.versionName
+        }
+        ndk {
+            moduleName "bar"
+            platformVersion rootProject.ext.platformVersion
+            toolchain "gcc"
+            stl "gnustl_shared"
+            abiFilters.add("armeabi-v7a")
+            CFlags.addAll([ "-fexceptions", "-DKTX_OPENGL_ES3", "-DSUPPORT_SOFTWARE_ETC_UNPACK=1" ])
+            cppFlags.addAll(CFlags)
+            ldLibs.addAll([ "log", "android", "GLESv3", "EGL" ])
+        }
+
+        sources.main {
+            jni {
+                source {
+                    srcDirs = [
+                            "src/main/cpp"
+                    ]
+                }
+                exportedHeaders {
+                    srcDirs = [
+                            "include"
+                    ]
+                }
+            }
+        }
+    }
+}

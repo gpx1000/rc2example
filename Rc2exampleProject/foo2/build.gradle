@@ -1,0 +1,26 @@
+apply plugin: 'com.android.model.library'
+
+model {
+    android {
+        compileSdkVersion rootProject.ext.compileSdkVersion
+        buildToolsVersion rootProject.ext.buildToolsVersion
+        defaultConfig.with {
+            minSdkVersion.apiLevel rootProject.ext.minSdkVersion
+            targetSdkVersion.apiLevel rootProject.ext.targetSdkVersion
+            versionCode rootProject.ext.versionCode
+            versionName rootProject.ext.versionName
+            externalNativeBuild {
+                cmake {
+                    targets.add("foo2")
+                    arguments.add("-DANDROID_TOOLCHAIN=gcc")
+                    abiFilters.add("armeabi-v7a")
+                }
+            }
+        }
+        externalNativeBuild {
+            cmake {
+                path "CMakeLists.txt"
+            }
+        }
+    }
+}

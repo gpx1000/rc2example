@@ -1,0 +1,86 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "com.gpxblog.rc2exampleProject"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_FORCE_ARM_BUILD=ON", "-DANDROID_TOOLCHAIN=gcc", "-DANDROID_ARM_NEON=ON", "-DTOP_PATH=" + file("../../").absolutePath
+                abiFilters "armeabi-v7a"
+                cppFlags.addAll( [
+                        "-std=c++11"
+                ] )
+            }
+        }
+    }
+    productFlavors {
+        oculus {
+            externalNativeBuild {
+                cmake {
+                    targets "native-lib"
+                    arguments "-DBUILD_OCULUS=ON"
+                }
+            }
+
+        }
+        android {
+            externalNativeBuild {
+                cmake {
+                    targets "native-lib"
+                    arguments "-DBUILD_OCULUS=OFF"
+                }
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = [ "src/main/java" ]
+            }
+        }
+        android {
+            java {
+                srcDirs = [ "src/main/javaAndroid" ]
+            }
+        }
+        oculus {
+            java {
+                srcDirs = [ "src/main/javaOculus" ]
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+    packagingOptions {
+        pickFirst "lib/armeabi-v7a/foo.so"
+        pickFirst "lib/armeabi-v7a/libgnustl_shared.so"
+    }
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a'
+            universalApk false
+        }
+    }
+}
+
+dependencies {
+    compile project(path: ':foo')
+    compile project(path: ':bar')
+    compile project(path: ':foo2')
+    compile project(path: ':bar2')
+    compile project(path: ':foo3')
+    compile project(path: ':bar3')
+//    compile project(path: ':foo4')
+}

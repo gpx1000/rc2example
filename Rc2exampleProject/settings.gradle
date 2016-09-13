@@ -1,0 +1,1 @@
+include ':app', ':foo', ':bar', ':foo2', ':bar2', ':foo3', ':bar3', ':foo4'

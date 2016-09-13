@@ -1,0 +1,70 @@
+apply plugin: 'com.android.model.library'
+
+model {
+    repositories {
+        libs(PrebuiltLibraries) {
+             foo {
+                binaries.withType(SharedLibraryBinary) {
+                    sharedLibraryFile = file("../foo/build/intermediates/cmake/release/lib/${targetPlatform.getName()}/libfoo.so")
+                }
+            }
+            foo2 {
+                binaries.withType(StaticLibraryBinary) {
+                    staticLibraryFile = file("../foo2/build/intermediates/cmake/release/lib/${targetPlatform.getName()}/libfoo2.a")
+                }
+            }
+            foo4 {
+                binaries.withType(StaticLibraryBinary) {
+                    staticLibraryFile = file("../foo4/build/intermediates/cmake/release/lib/${targetPlatform.getName()}/libfoo4.a")
+                }
+            }
+        }
+    }
+    android {
+        compileSdkVersion rootProject.ext.compileSdkVersion
+        buildToolsVersion rootProject.ext.buildToolsVersion
+        defaultConfig.with {
+            minSdkVersion.apiLevel rootProject.ext.minSdkVersion
+            targetSdkVersion.apiLevel rootProject.ext.targetSdkVersion
+            versionCode rootProject.ext.versionCode
+            versionName rootProject.ext.versionName
+        }
+
+        ndk {
+            moduleName "foo3"
+            platformVersion rootProject.ext.platformVersion
+            toolchain "gcc"
+            stl "gnustl_shared"
+            abiFilters.add("armeabi-v7a")
+            CFlags.addAll([ "-fexceptions", "-fpermissive", "-DKTX_OPENGL_ES3", "-DP_ANDROID32", "-Wno-deprecated-register" ])
+            cppFlags.addAll(CFlags)
+            ldLibs.addAll([ "log", "android", "GLESv3", "EGL" ])
+        }
+        sources.main{
+            jni {
+                source {
+                    srcDirs = [
+                            'src/main/cpp'
+                    ]
+                }
+                exportedHeaders {
+                    srcDirs = [
+                            'include'
+                    ]
+                }
+                dependencies {
+                    library "foo" linkage "shared"
+                    project ":bar" linkage "static"
+                    library "foo2" linkage "static"
+                    library "foo4" linkage "static"
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile project(path: ":foo")
+    compile project(path: ":foo2")
+    compile project(path: ":foo4")
+}
