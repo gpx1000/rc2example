@@ -38,7 +38,7 @@ set_target_properties(
             foo
             PROPERTIES
             IMPORTED_LOCATION
-            ${TOP_PATH}/Rc2exampleProject/foo/build/intermediates/cmake/release/lib/armeabi-v7a/libfoo.so
+            ${TOP_PATH}/Rc2exampleProject/foo/build/intermediates/cmake/release/obj/armeabi-v7a/libfoo.so
         )
 
 add_library( bar2 STATIC IMPORTED )
@@ -54,7 +54,7 @@ set_target_properties(
             foo3
             PROPERTIES
             IMPORTED_LOCATION
-            ${TOP_PATH}/Rc2exampleProject/foo3/build/intermediates/binaries/release/lib/armeabi-v7a/libfoo3.so
+            ${TOP_PATH}/Rc2exampleProject/foo3/build/intermediates/binaries/release/obj/armeabi-v7a/libfoo3.so
         )
 
 add_library(cpufeatures ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c)
@@ -69,7 +69,7 @@ if(NOT BUILD_OCULUS)
                 native-lib
                 PROPERTIES
                 IMPORTED_LOCATION
-                ${TOP_PATH}/Rc2exampleProject/foo2/build/intermediates/cmake/release/lib/armeabi-v7a/libfoo2.so
+                ${TOP_PATH}/Rc2exampleProject/foo2/build/intermediates/cmake/release/obj/armeabi-v7a/libfoo2.so
             )
 
     target_link_libraries( native-lib ${log-lib} ${EGL-lib} ${GLESv3-lib} ${android-log} cpufeatures

@@ -5,7 +5,7 @@ model {
         libs(PrebuiltLibraries) {
              foo {
                 binaries.withType(SharedLibraryBinary) {
-                    sharedLibraryFile = file("../foo/build/intermediates/cmake/release/lib/${targetPlatform.getName()}/libfoo.so")
+                    sharedLibraryFile = file("../foo/build/intermediates/cmake/release/obj/${targetPlatform.getName()}/libfoo.so")
                 }
             }
             foo2 {
