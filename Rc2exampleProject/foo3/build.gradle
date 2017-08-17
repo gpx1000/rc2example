@@ -10,12 +10,12 @@ model {
             }
             foo2 {
                 binaries.withType(StaticLibraryBinary) {
-                    staticLibraryFile = file("../foo2/build/intermediates/cmake/release/lib/${targetPlatform.getName()}/libfoo2.a")
+                    staticLibraryFile = file("../foo2/.externalNativeBuild/cmake/release/${targetPlatform.getName()}/libfoo2.a")
                 }
             }
             foo4 {
                 binaries.withType(StaticLibraryBinary) {
-                    staticLibraryFile = file("../foo4/build/intermediates/cmake/release/lib/${targetPlatform.getName()}/libfoo4.a")
+                    staticLibraryFile = file("../foo4/.externalNativeBuild/cmake/release/${targetPlatform.getName()}/libfoo4.a")
                 }
             }
         }
@@ -67,4 +67,12 @@ dependencies {
     compile project(path: ":foo")
     compile project(path: ":foo2")
     compile project(path: ":foo4")
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('link')) {
+        task.dependsOn(rootProject.getSubprojects().findAll { subproject -> subproject.name == project(":foo").name }.collect { subproject -> "${subproject.getPath()}:build" })
+        task.dependsOn(rootProject.getSubprojects().findAll { subproject -> subproject.name == project(":foo2").name }.collect { subproject -> "${subproject.getPath()}:build" })
+        task.dependsOn(rootProject.getSubprojects().findAll { subproject -> subproject.name == project(":foo4").name }.collect { subproject -> "${subproject.getPath()}:build" })
+    }
 }

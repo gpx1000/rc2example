@@ -39,3 +39,9 @@ model {
 dependencies {
     compile project(path: ':bar')
 }
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('link')) {
+        task.dependsOn(rootProject.getSubprojects().findAll { subproject -> subproject.name == project(":bar").name }.collect { subproject -> "${subproject.getPath()}:build" })
+    }
+}

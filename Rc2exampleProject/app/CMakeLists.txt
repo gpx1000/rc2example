@@ -46,7 +46,7 @@ set_target_properties(
             bar2
             PROPERTIES
             IMPORTED_LOCATION
-            ${TOP_PATH}/Rc2exampleProject/bar2/build/intermediates/cmake/release/lib/armeabi-v7a/libbar2.a
+            ${TOP_PATH}/Rc2exampleProject/bar2/.externalNativeBuild/cmake/release/armeabi-v7a/libbar2.a
         )
 
 add_library( foo3 SHARED IMPORTED )

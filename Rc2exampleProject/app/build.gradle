@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    flavorDimensions "dim"
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
@@ -27,7 +28,7 @@ android {
                     arguments "-DBUILD_OCULUS=ON"
                 }
             }
-
+            dimension "dim"
         }
         android {
             externalNativeBuild {
@@ -36,6 +37,7 @@ android {
                     arguments "-DBUILD_OCULUS=OFF"
                 }
             }
+            dimension "dim"
         }
     }
 
@@ -76,11 +78,18 @@ android {
 }
 
 dependencies {
-    compile project(path: ':foo')
-    compile project(path: ':bar')
-    compile project(path: ':foo2')
-    compile project(path: ':bar2')
-    compile project(path: ':foo3')
-    compile project(path: ':bar3')
-//    compile project(path: ':foo4')
+    implementation project(path: ':bar')
+    implementation project(path: ':bar2')
+    implementation project(path: ':foo3')
+    implementation project(path: ':bar3')
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('generate')) {
+        task.dependsOn(rootProject.getSubprojects().findAll { subproject -> subproject.name == project(":bar").name }.collect { subproject -> "${subproject.getPath()}:build" })
+        task.dependsOn(rootProject.getSubprojects().findAll { subproject -> subproject.name == project(":bar2").name }.collect { subproject -> "${subproject.getPath()}:build" })
+        task.dependsOn(rootProject.getSubprojects().findAll { subproject -> subproject.name == project(":foo3").name }.collect { subproject -> "${subproject.getPath()}:build" })
+        task.dependsOn(rootProject.getSubprojects().findAll { subproject -> subproject.name == project(":bar3").name }.collect { subproject -> "${subproject.getPath()}:build" })
+        task.dependsOn(rootProject.getSubprojects().findAll { subproject -> subproject.name == project(":foo2").name }.collect { subproject -> "${subproject.getPath()}:build" })
+    }
 }
