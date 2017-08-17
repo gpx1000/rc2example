@@ -43,7 +43,7 @@ project.ext {
     versionName = "ver-${versionMajor}.${versionMinor}.${versionPatch} ${buildTime()}"
     minSdkVersion = 21
     platformVersion = "android-21"
-    targetSdkVersion = 25
+    targetSdkVersion = 26
     ndkDir = properties.getProperty('ndk.dir')
     deviceTestsFolder = "/data/local/tmp"
 }
